@@ -1,22 +1,21 @@
-package com.mmall.concurrency.test;
-import	java.util.concurrent.CountDownLatch;
-import	java.util.concurrent.Semaphore;
-import	java.util.concurrent.Executors;
+package com.mmall.concurrency.example.count;
+import	java.util.concurrent.atomic.AtomicInteger;
 
-import com.mmall.concurrency.annoations.NotThreadSafe;
+import com.mmall.concurrency.annoations.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
-
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 @Slf4j
-@NotThreadSafe
-public class ConcurrencyTest {
+@ThreadSafe
+public class CountExample2 {
     /*请求总数*/
     public static int clientTotal = 5000;
     // 同时并发执行的线程数
     public static int threadTotal = 200;
 
-    public static int count = 0;
+    public static AtomicInteger count = new AtomicInteger(0);
 
     public static void main(String[] args) throws InterruptedException {
         //定义线程池
@@ -39,11 +38,10 @@ public class ConcurrencyTest {
         }
         countDownLatch.await();
         executorService.shutdown();
-        log.info("count:{}",count);
+        log.info("count:{}",count.get());
     }
 
     public static void add() {
-        count++;
+        count.incrementAndGet();
     }
-
 }
